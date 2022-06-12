@@ -1,0 +1,113 @@
+---
+title: "poster_edu"
+output: html_document
+date: '2022-06-05'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Reading of the dataset 
+
+```{r cars}
+student_data <- read.csv('https://raw.githubusercontent.com/huiqin97/RPoster_huiqin/main/data.csv',sep=";")
+head(student_data,10)
+```
+```{r}
+colnames(student_data)
+```
+
+```{r}
+library(dplyr)
+student_data_mutate<-student_data %>%
+  mutate(Nacionality = case_when (
+    Nacionality == 1 ~"Portugese",
+    Nacionality == 2 ~"German",
+    Nacionality == 6 ~"Spanish",
+    Nacionality == 11 ~"Italian",
+    Nacionality == 13 ~"Dutch",
+    Nacionality == 14 ~"English",
+    Nacionality == 17 ~"Lithuanian",
+    Nacionality == 21 ~"Angolan",
+    Nacionality == 22 ~"Cape Verdean",
+    Nacionality == 24 ~"Guinean",
+    Nacionality == 25 ~"Mozambican",
+    Nacionality == 26 ~"Santomean",
+    Nacionality == 32 ~"Turkish",
+    Nacionality == 41 ~"Brazilian",
+    Nacionality == 62 ~"Romanian",
+    Nacionality == 100 ~"Moldova",
+    Nacionality == 101 ~"Mexican",
+    Nacionality == 103 ~"Ukrainian",
+    Nacionality == 105 ~"Russian",
+    Nacionality == 108 ~"Cuban",
+    Nacionality == 109 ~"Colombian",
+    TRUE ~ as.character(Nacionality)
+    
+  ))
+
+```
+
+```{r}
+library(ggplot2)
+
+country_distribute<-student_data_mutate %>% 
+  count(Nacionality)
+
+country_distribute
+```
+
+```{r}
+# Create a basic bar
+ggplot(country_distribute, aes(x="", y=n, fill=Nacionality)) + geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)
+ 
+
+```
+
+```{r}
+scholar_distribute<-student_data %>% 
+  count(Scholarship.holder,Target=='Dropout',sort=TRUE)
+
+scholar_distribute
+
+```
+
+```{r}
+holdScholarship<-c('Yes','No')
+num<-c(134,1287)
+scholarship_details <-data.frame(holdScholarship,num)
+```
+
+```{r}
+
+ggplot(scholarship_details, aes(x="", y=num, fill=holdScholarship)) + geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)
+
+```
+```{r}
+
+scholar_distribute<-student_data %>% 
+  count(Daytime.evening.attendance.,Target=='Dropout',sort=TRUE)
+
+scholar_distribute
+
+```
+```{r}
+attendance<-c('Attend','Absent')
+num_attend<-c(1214,207)
+attendance_details <-data.frame(attendance,num_attend)
+```
+
+```{r}
+
+ggplot(attendance_details, aes(x="", y=num_attend, fill=attendance)) + geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)
+
+```
+
+```{r}
+for ( i in seq(1,length( student_data ),1) ) plot(student_data[,i],ylab=names(student_data[i]),type="l")
+
+```
